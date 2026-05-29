@@ -1,0 +1,37 @@
+<mat-sidenav-container class="shell">
+  <mat-sidenav #drawer mode="over" class="side">
+    <mat-nav-list>
+      <a mat-list-item routerLink="/" (click)="drawer.close()">Home</a>
+      <a mat-list-item routerLink="/chat" (click)="drawer.close()">AI recommendations</a>
+      <a mat-list-item routerLink="/cars" (click)="drawer.close()">Browse cars</a>
+      <a mat-list-item routerLink="/compare" (click)="drawer.close()">Compare</a>
+      <a mat-list-item routerLink="/shortlist" (click)="drawer.close()">Shortlist</a>
+      @if (!tokens.isAuthenticated()) {
+        <a mat-list-item routerLink="/auth/login" (click)="drawer.close()">Login</a>
+        <a mat-list-item routerLink="/auth/register" (click)="drawer.close()">Register</a>
+      } @else {
+        <a mat-list-item routerLink="/profile" (click)="drawer.close()">Profile</a>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar class="toolbar glass cd-toolbar">
+      <button mat-icon-button type="button" aria-label="Menu" (click)="drawer.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <a routerLink="/" class="brand">CarDekho<span class="accent">AI</span></a>
+      <span class="spacer"></span>
+      <button mat-icon-button type="button" (click)="theme.toggle()" [attr.aria-label]="theme.dark() ? 'Light mode' : 'Dark mode'">
+        <mat-icon>{{ theme.dark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
+      @if (!tokens.isAuthenticated()) {
+        <a mat-button routerLink="/auth/login">Login</a>
+      } @else {
+        <a mat-button routerLink="/profile">Account</a>
+      }
+    </mat-toolbar>
+    <main class="main">
+      <router-outlet />
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

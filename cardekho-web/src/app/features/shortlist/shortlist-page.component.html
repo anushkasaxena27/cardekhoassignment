@@ -1,0 +1,39 @@
+<div class="wrap cd-shortlist">
+  <header class="hd">
+    <h1>Your shortlist</h1>
+    <p class="lead">Save cars from AI results or listings. Signed-in users sync to the server; guests keep a list on this device.</p>
+  </header>
+  @if (loading()) {
+    <div class="center"><mat-progress-spinner diameter="40" mode="indeterminate" /></div>
+  } @else if (shortlist.items().length === 0) {
+    <mat-card appearance="outlined" class="empty-card">
+      <mat-card-content>No cars saved yet. Add from details or AI recommendations.</mat-card-content>
+      <mat-card-actions>
+        <a mat-flat-button color="primary" routerLink="/chat">Try AI search</a>
+        <a mat-button routerLink="/cars">Browse cars</a>
+      </mat-card-actions>
+    </mat-card>
+  } @else {
+    <div class="grid cd-car-grid">
+      @for (c of shortlist.items(); track c.id) {
+        <mat-card appearance="outlined" class="card cd-car-card">
+          <app-car-image [src]="c.imageUrl" [alt]="c.makeName + ' ' + c.modelName" imgClass="cd-list-thumb" />
+          <mat-card-header>
+            <mat-card-title>{{ c.makeName }} {{ c.modelName }}</mat-card-title>
+            <mat-card-subtitle>{{ c.variantName }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="price">{{ c.exShowroomPrice | inr }}</div>
+          </mat-card-content>
+          <mat-card-actions align="end">
+            <a mat-flat-button color="primary" [routerLink]="['/cars', c.id]">View</a>
+            <button mat-button type="button" (click)="remove(c.id)">Remove</button>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+    <div class="actions">
+      <a mat-flat-button color="primary" routerLink="/compare" [queryParams]="compareQuery()">Compare all</a>
+    </div>
+  }
+</div>

@@ -1,0 +1,103 @@
+<div class="page cd-rec-page">
+  <header class="head">
+    <h1>AI car recommendations</h1>
+    <p class="lead">Type what you need — we match real cars from your inventory with photos, prices, and clear “why this car” reasons.</p>
+  </header>
+
+  <div class="chat">
+    @for (turn of turns(); track trackTurn($index, turn)) {
+      <div class="bubble" [class.user]="turn.role === 'user'" [class.ai]="turn.role === 'assistant'">
+        <div class="bubble-label">{{ turn.role === 'user' ? 'You' : 'Assistant' }}</div>
+        <div class="bubble-body">{{ turn.text }}</div>
+        @if (turn.response) {
+          <div class="intent">
+            <span class="intent-title">What we understood</span>
+            <mat-chip-set class="cd-chip-wrap">
+              @if (turn.response.extractedIntent.budgetMaxInr) {
+                <mat-chip>Budget ≤ {{ turn.response.extractedIntent.budgetMaxInr | inr }}</mat-chip>
+              }
+              @for (b of turn.response.extractedIntent.bodyTypes ?? []; track b) {
+                <mat-chip>{{ b }}</mat-chip>
+              }
+              @for (fu of turn.response.extractedIntent.fuelTypes ?? []; track fu) {
+                <mat-chip>{{ fu }}</mat-chip>
+              }
+              @for (u of turn.response.extractedIntent.usageIntents ?? []; track u) {
+                <mat-chip>{{ u }}</mat-chip>
+              }
+              @for (f of turn.response.extractedIntent.featureSignals ?? []; track f) {
+                <mat-chip>{{ f }}</mat-chip>
+              }
+            </mat-chip-set>
+          </div>
+        }
+      </div>
+    }
+    @if (busy()) {
+      <div class="typing">
+        <mat-progress-spinner diameter="28" mode="indeterminate" />
+        <span>Scoring cars from your catalog…</span>
+      </div>
+    }
+  </div>
+
+  @if (lastCards().length) {
+    <h2 class="matches-title">Top matches for you</h2>
+    <div class="cards cd-rec-grid">
+      @for (r of lastCards(); track r.variantId) {
+        <mat-card class="rec cd-rec-card" appearance="outlined">
+          <div class="score-badge">{{ r.matchScore }}% match</div>
+          <app-car-image [src]="r.imageUrl" [alt]="r.car" imgClass="cd-rec-thumb" />
+          <mat-card-header>
+            <mat-card-title class="rec-title">{{ r.car }}</mat-card-title>
+            <mat-card-subtitle class="rec-sub">
+              <span class="rec-price">{{ r.exShowroomPrice | inr }}</span>
+              @if (r.mileage != null) {
+                <span class="dot">·</span>
+                <span>{{ r.mileage | number: '1.0-1' }} kmpl</span>
+              }
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="reasons">
+              @for (reason of r.reasons; track reason) {
+                <span class="reason">{{ reason }}</span>
+              }
+            </div>
+          </mat-card-content>
+          <mat-card-actions class="rec-actions" align="end">
+            <a mat-flat-button color="primary" [routerLink]="['/cars', r.variantId]">View details</a>
+            <button mat-stroked-button type="button" (click)="addShortlist(r.variantId)">Shortlist</button>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+  }
+
+  @if (history.items().length) {
+    <div class="history glass">
+      <span class="history-label">Recent searches</span>
+      <mat-chip-set class="cd-chip-scroll">
+        @for (h of history.items(); track h) {
+          <mat-chip (click)="rerunFromHistory(h)">{{ h }}</mat-chip>
+        }
+      </mat-chip-set>
+    </div>
+  }
+
+  <div class="composer glass">
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>What car are you looking for?</mat-label>
+        <textarea matInput rows="3" formControlName="query" placeholder="e.g. Safe automatic SUV under 20 lakhs with good mileage"></textarea>
+      </mat-form-field>
+      <div class="row">
+        <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid || busy()">
+          <mat-icon>send</mat-icon>
+          Get recommendations
+        </button>
+        <button mat-button type="button" (click)="useSuggestion('Best EV for city driving under 30 lakhs')">Try sample</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,109 @@
+.center {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 1rem;
+}
+
+.hero-strip {
+  min-height: 220px;
+  background-size: cover;
+  background-position: center;
+  color: #f3f6fa;
+}
+
+.hero-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1rem 2.5rem;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  opacity: 0.85;
+}
+
+.titles h1 {
+  margin: 0.25rem 0;
+  font-size: clamp(1.75rem, 3vw, 2.4rem);
+}
+
+.variant {
+  opacity: 0.9;
+}
+
+.price-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.price {
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 3rem;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.g {
+  height: 100px;
+  border-radius: 10px;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--mat-sys-outline-variant);
+}
+
+.tab-pad {
+  padding: 1rem 0;
+}
+
+.spec {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.spec th,
+.spec td {
+  text-align: left;
+  padding: 0.5rem 0.35rem;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.spec th {
+  width: 38%;
+  opacity: 0.8;
+  font-weight: 600;
+}
+
+.feat {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.safety {
+  margin-bottom: 0.75rem;
+}
+
+.sim {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+
+.muted {
+  opacity: 0.75;
+}

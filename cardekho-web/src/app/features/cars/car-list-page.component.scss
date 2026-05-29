@@ -1,0 +1,75 @@
+.cd-browse {
+  max-width: var(--cd-max-content);
+  margin: 0 auto;
+  padding: 1.25rem max(0.75rem, env(safe-area-inset-left)) 3rem max(0.75rem, env(safe-area-inset-right));
+}
+
+.browse-head h1 {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.45rem, 3vw, 1.85rem);
+}
+
+.sub {
+  margin: 0 0 1.25rem;
+  color: var(--cd-muted);
+  max-width: 60ch;
+}
+
+.filters {
+  margin-bottom: 1.25rem;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+  gap: 0.75rem 1rem;
+  align-items: start;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.cd-car-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: 1.25rem;
+}
+
+.cd-car-card {
+  border-radius: var(--cd-radius-lg) !important;
+  overflow: hidden;
+  box-shadow: var(--cd-shadow-card);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+::ng-deep .cd-list-thumb {
+  border-radius: 0 !important;
+}
+
+.price {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.meta {
+  font-size: 0.86rem;
+  color: var(--cd-muted);
+}
+
+.cd-paginator {
+  margin-top: 1.25rem;
+  border-radius: var(--cd-radius-md);
+  background: var(--cd-surface);
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}

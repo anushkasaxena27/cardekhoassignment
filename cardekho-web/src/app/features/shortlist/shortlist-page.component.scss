@@ -1,0 +1,55 @@
+.cd-shortlist {
+  max-width: var(--cd-max-content);
+  margin: 0 auto;
+  padding: 1.25rem max(0.75rem, env(safe-area-inset-left)) 3rem max(0.75rem, env(safe-area-inset-right));
+}
+
+.hd h1 {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.45rem, 3vw, 1.85rem);
+}
+
+.lead {
+  color: var(--cd-muted);
+  margin: 0 0 1.25rem;
+  max-width: 60ch;
+}
+
+.empty-card {
+  max-width: 520px;
+  border-radius: var(--cd-radius-lg) !important;
+}
+
+.cd-car-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: 1.25rem;
+  margin-top: 0.5rem;
+}
+
+.cd-car-card {
+  border-radius: var(--cd-radius-lg) !important;
+  overflow: hidden;
+  box-shadow: var(--cd-shadow-card);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+::ng-deep .cd-list-thumb {
+  border-radius: 0 !important;
+}
+
+.price {
+  font-weight: 700;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.actions {
+  margin-top: 1.5rem;
+}

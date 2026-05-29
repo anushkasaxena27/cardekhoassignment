@@ -1,0 +1,118 @@
+/* Global: CarDekho-inspired marketplace UI + responsive layout */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Noto+Sans:wght@400;500;600&display=swap');
+
+:root {
+  --cd-brand: #f75d34;
+  --cd-brand-hover: #e04d26;
+  --cd-ink: #1f2329;
+  --cd-muted: #5a6169;
+  --cd-page-bg: #f1f4f8;
+  --cd-surface: #ffffff;
+  --cd-surface-muted: #e6ebf2;
+  --cd-border: #d8dee6;
+  --cd-electric: #0b6bcb;
+  --cd-radius-lg: 14px;
+  --cd-radius-md: 10px;
+  --cd-shadow-card: 0 4px 18px rgba(15, 20, 26, 0.06);
+  --cd-max-content: 1240px;
+  --mat-sys-primary: #f75d34;
+  --mat-sys-on-primary: #ffffff;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'DM Sans', 'Noto Sans', Roboto, 'Helvetica Neue', sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--cd-ink);
+  background: var(--cd-page-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+body.cd-theme-dark {
+  --cd-ink: #eef2f7;
+  --cd-muted: #a8b0bc;
+  --cd-page-bg: #12151a;
+  --cd-surface: #1c2128;
+  --cd-surface-muted: #2a313c;
+  --cd-border: #3a424d;
+  --cd-shadow-card: 0 8px 28px rgba(0, 0, 0, 0.35);
+}
+
+.mat-mdc-raised-button.mat-primary,
+.mat-mdc-flat-button.mat-primary,
+.mat-mdc-mini-fab.mat-primary {
+  --mdc-filled-button-container-color: var(--cd-brand);
+  --mdc-filled-button-hover-state-layer-color: rgba(255, 255, 255, 0.12);
+}
+
+.mat-mdc-outlined-button.mat-primary {
+  --mdc-outlined-button-label-text-color: var(--cd-brand);
+}
+
+a.mat-mdc-button.mat-primary {
+  --mdc-text-button-label-text-color: var(--cd-brand);
+}
+
+/* Listing / card imagery */
+.cd-car-img {
+  display: block;
+}
+
+.cd-rec-thumb {
+  border-radius: var(--cd-radius-md) var(--cd-radius-md) 0 0;
+}
+
+/* Content width + horizontal padding for phones */
+.cd-content,
+main.main {
+  box-sizing: border-box;
+}
+
+main.main {
+  padding-left: max(0.75rem, env(safe-area-inset-left));
+  padding-right: max(0.75rem, env(safe-area-inset-right));
+}
+
+/* Toolbar readability */
+.mat-toolbar.cd-toolbar,
+.mat-mdc-toolbar.cd-toolbar {
+  min-height: 56px;
+}
+
+@media (min-width: 600px) {
+  .mat-toolbar.cd-toolbar,
+  .mat-mdc-toolbar.cd-toolbar {
+    min-height: 64px;
+  }
+}
+
+/* Form fields slightly tighter on narrow screens */
+@media (max-width: 599px) {
+  .mat-mdc-form-field {
+    width: 100%;
+  }
+}
+
+/* Horizontal scroll for chip rows on mobile */
+.cd-chip-scroll {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+/* Compare columns stack */
+@media (max-width: 899px) {
+  .cd-compare-cols {
+    flex-direction: column !important;
+  }
+}

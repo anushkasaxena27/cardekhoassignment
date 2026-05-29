@@ -1,0 +1,114 @@
+@if (loading()) {
+  <div class="center"><mat-progress-spinner diameter="48" mode="indeterminate" /></div>
+} @else {
+  @if (car(); as c) {
+    <div
+      class="hero-strip"
+      [style.backgroundImage]="
+        c.imageUrl ? 'linear-gradient(90deg, rgba(15,20,26,.92), rgba(15,20,26,.55)), url(' + c.imageUrl + ')' : 'none'
+      "
+    >
+      <div class="hero-inner">
+        <div class="titles">
+          <div class="eyebrow">{{ c.makeName }}</div>
+          <h1>{{ c.modelName }}</h1>
+          <p class="variant">{{ c.variantName }}</p>
+          <div class="price-row">
+            <span class="price">{{ c.exShowroomPrice | inr }} ex-showroom</span>
+            <button mat-flat-button color="primary" type="button" (click)="addShortlist()">Save to shortlist</button>
+            <a mat-stroked-button routerLink="/compare">Compare</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page">
+      @if (c.images.length) {
+        <div class="gallery">
+          @for (im of c.images; track im.imageUrl) {
+            <div class="g" [style.backgroundImage]="'url(' + im.imageUrl + ')'" [title]="im.imageType ?? ''"></div>
+          }
+        </div>
+      }
+
+      <mat-tab-group mat-stretch-tabs="false" animationDuration="300ms">
+        <mat-tab label="Overview">
+          <div class="tab-pad">
+            <p>{{ c.segment }} segment · {{ c.bodyType }} · {{ c.fuelType }} · {{ c.transmission }}</p>
+            <p class="muted">Owners rate this variant {{ c.averageUserRating ?? '—' }} / 5 ({{ c.reviewCount }} reviews).</p>
+          </div>
+        </mat-tab>
+        <mat-tab label="Specifications">
+          <div class="tab-pad">
+            <table class="spec">
+              @for (row of specRows(c); track row.k) {
+                <tr>
+                  <th>{{ row.k }}</th>
+                  <td>{{ row.v }}</td>
+                </tr>
+              }
+            </table>
+          </div>
+        </mat-tab>
+        <mat-tab label="Features">
+          <div class="tab-pad">
+            @if (c.features; as f) {
+              <ul class="feat">
+                <li>Sunroof: {{ f.sunroof ? 'Yes' : 'No' }}</li>
+                <li>Panoramic: {{ f.panoramicSunroof ? 'Yes' : 'No' }}</li>
+                <li>Ventilated seats: {{ f.ventilatedSeats ? 'Yes' : 'No' }}</li>
+                <li>Wireless charging: {{ f.wirelessCharging ? 'Yes' : 'No' }}</li>
+                <li>Cruise control: {{ f.cruiseControl ? 'Yes' : 'No' }}</li>
+                <li>Connected tech: {{ f.connectedCarTech ? 'Yes' : 'No' }}</li>
+                <li>Infotainment: {{ f.infotainmentSize ?? '—' }}″</li>
+                <li>Audio: {{ f.audioSystem ?? '—' }}</li>
+              </ul>
+            } @else {
+              <p>No feature bundle on file.</p>
+            }
+          </div>
+        </mat-tab>
+        <mat-tab label="Safety">
+          <div class="tab-pad">
+            @for (s of c.safetyRatings; track s.agency) {
+              <mat-card class="safety" appearance="outlined">
+                <mat-card-title>{{ s.agency }}</mat-card-title>
+                <mat-card-content>
+                  <p>Rating: {{ s.rating ?? '—' }}</p>
+                  <p>Airbags: {{ s.airbags ?? '—' }} · ABS: {{ s.abs }} · ESC: {{ s.esc }}</p>
+                  <p>ADAS: {{ s.adasFeatures ?? '—' }}</p>
+                </mat-card-content>
+              </mat-card>
+            }
+          </div>
+        </mat-tab>
+        <mat-tab label="Reviews">
+          <div class="tab-pad">
+            <p>Aggregate owner rating: <strong>{{ c.averageUserRating ?? '—' }}</strong> / 5</p>
+            <p class="muted">Per-review text can be wired when the backend exposes a review list.</p>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+
+      @if (similar().length) {
+        <h2>Similar cars</h2>
+        <div class="sim">
+          @for (s of similar(); track s.id) {
+            <mat-card class="sim-card" appearance="outlined">
+              <mat-card-header>
+                <mat-card-title>{{ s.makeName }} {{ s.modelName }}</mat-card-title>
+                <mat-card-subtitle>{{ s.variantName }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>{{ s.exShowroomPrice | inr }}</mat-card-content>
+              <mat-card-actions>
+                <a mat-button [routerLink]="['/cars', s.id]">Open</a>
+              </mat-card-actions>
+            </mat-card>
+          }
+        </div>
+      }
+    </div>
+  } @else {
+    <p class="center">Car not found.</p>
+  }
+}

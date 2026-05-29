@@ -1,0 +1,17 @@
+{
+  "name": "cardekho",
+  "private": true,
+  "description": "Dev runner: Spring Boot (8081) + Angular; frontend waits for backend.",
+  "scripts": {
+    "install:web": "npm --prefix cardekho-web install",
+    "start": "concurrently -k -n backend,frontend -c blue,magenta \"npm run start:backend\" \"npm run start:frontend-wait\"",
+    "start:backend": "cross-env SERVER_PORT=8081 node scripts/run-spring-boot.cjs",
+    "start:frontend-wait": "wait-on -t 180000 http-get://127.0.0.1:8081/api/cars && npm run start:frontend",
+    "start:frontend": "npm --prefix cardekho-web start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "wait-on": "^8.0.3"
+  }
+}

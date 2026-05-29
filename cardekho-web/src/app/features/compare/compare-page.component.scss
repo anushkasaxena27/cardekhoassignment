@@ -1,0 +1,73 @@
+.cd-compare {
+  max-width: var(--cd-max-content);
+  margin: 0 auto;
+  padding: 1.25rem max(0.75rem, env(safe-area-inset-left)) 3rem max(0.75rem, env(safe-area-inset-right));
+}
+
+.hd h1 {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.45rem, 3vw, 1.85rem);
+}
+
+.lead {
+  color: var(--cd-muted);
+  margin: 0 0 1.25rem;
+  max-width: 65ch;
+}
+
+.panel {
+  margin: 1rem 0 1.5rem;
+  border-radius: var(--cd-radius-lg) !important;
+}
+
+.row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.grow {
+  flex: 1;
+  min-width: min(100%, 220px);
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 1.25rem;
+}
+
+.cd-compare-card {
+  border-radius: var(--cd-radius-lg) !important;
+  overflow: hidden;
+  box-shadow: var(--cd-shadow-card);
+}
+
+::ng-deep .cd-compare-thumb {
+  border-radius: 0 !important;
+}
+
+.kv {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem 0.75rem;
+  margin: 0;
+}
+
+.kv dt {
+  color: var(--cd-muted);
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+
+.kv dd {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}

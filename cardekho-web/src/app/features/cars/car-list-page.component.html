@@ -1,0 +1,92 @@
+<div class="wrap cd-browse">
+  <header class="browse-head">
+    <h1>New cars for sale</h1>
+    <p class="sub">Filter by body, fuel, and budget — same inventory powers AI recommendations.</p>
+  </header>
+  <mat-accordion class="filters">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Filters</mat-panel-title>
+      </mat-expansion-panel-header>
+      <form [formGroup]="filterForm" class="filter-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Body</mat-label>
+          <mat-select formControlName="bodyType">
+            <mat-option value="">Any</mat-option>
+            <mat-option value="SUV">SUV</mat-option>
+            <mat-option value="Sedan">Sedan</mat-option>
+            <mat-option value="Hatchback">Hatchback</mat-option>
+            <mat-option value="MUV">MUV</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Fuel</mat-label>
+          <mat-select formControlName="fuelType">
+            <mat-option value="">Any</mat-option>
+            <mat-option value="Petrol">Petrol</mat-option>
+            <mat-option value="Diesel">Diesel</mat-option>
+            <mat-option value="Electric">Electric</mat-option>
+            <mat-option value="Hybrid">Hybrid</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Transmission</mat-label>
+          <mat-select formControlName="transmission">
+            <mat-option value="">Any</mat-option>
+            <mat-option value="Manual">Manual</mat-option>
+            <mat-option value="Automatic">Automatic</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Segment</mat-label>
+          <mat-select formControlName="segment">
+            <mat-option value="">Any</mat-option>
+            <mat-option value="Mass">Mass</mat-option>
+            <mat-option value="Mid">Mid</mat-option>
+            <mat-option value="Premium">Premium</mat-option>
+            <mat-option value="Luxury">Luxury</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Max price (INR)</mat-label>
+          <input matInput type="number" formControlName="maxPrice" placeholder="2000000" />
+        </mat-form-field>
+        <div class="filter-actions">
+          <button mat-flat-button color="primary" type="button" (click)="applyFilter()">Apply</button>
+          <button mat-button type="button" (click)="clearFilter()">Reset</button>
+        </div>
+      </form>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  @if (loading()) {
+    <div class="center"><mat-progress-spinner diameter="40" mode="indeterminate" /></div>
+  } @else if (page()) {
+    <div class="grid cd-car-grid">
+      @for (c of page()!.content; track c.id) {
+        <mat-card class="car cd-car-card" appearance="outlined">
+          <app-car-image [src]="c.imageUrl" [alt]="c.makeName + ' ' + c.modelName" imgClass="cd-list-thumb" />
+          <mat-card-header>
+            <mat-card-title>{{ c.makeName }} {{ c.modelName }}</mat-card-title>
+            <mat-card-subtitle>{{ c.variantName }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="price">{{ c.exShowroomPrice | inr }}</div>
+            <div class="meta">{{ c.bodyType }} · {{ c.fuelType }}</div>
+          </mat-card-content>
+          <mat-card-actions align="end">
+            <a mat-flat-button color="primary" [routerLink]="['/cars', c.id]">View</a>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+    <mat-paginator
+      class="cd-paginator"
+      [length]="page()!.totalElements"
+      [pageIndex]="page()!.number"
+      [pageSize]="page()!.size"
+      [pageSizeOptions]="[12, 24, 48]"
+      (page)="onPage($event)"
+    />
+  }
+</div>

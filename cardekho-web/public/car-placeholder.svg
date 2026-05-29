@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" fill="none">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2a3340"/>
+      <stop offset="100%" stop-color="#1a1f28"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="240" rx="12" fill="url(#g)"/>
+  <path fill="#4a5568" d="M60 150h280v20H60zm20-40h240l20 40H60l20-40z"/>
+  <circle cx="95" cy="175" r="22" fill="#718096"/>
+  <circle cx="305" cy="175" r="22" fill="#718096"/>
+  <path fill="#718096" d="M120 110h160c8 0 15 5 18 12l12 28H90l12-28c3-7 10-12 18-12z"/>
+  <text x="200" y="55" text-anchor="middle" fill="#a0aec0" font-family="system-ui,sans-serif" font-size="14">Car image</text>
+</svg>

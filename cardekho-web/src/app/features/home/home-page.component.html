@@ -1,0 +1,83 @@
+<section class="hero cd-hero">
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow">India’s trusted way to find your next car</p>
+      <h1>Find the right car, faster</h1>
+      <p class="sub">
+        Tell us budget, fuel, body style, and what matters most — our AI ranks real variants from inventory with clear reasons, just like browsing on CarDekho.
+      </p>
+      <div class="cta-row">
+        <a mat-flat-button color="primary" routerLink="/chat" class="cta">
+          <mat-icon>chat</mat-icon>
+          Ask AI
+        </a>
+        <a mat-stroked-button routerLink="/cars" class="cta ghost">Browse all cars</a>
+      </div>
+      <div class="cd-chip-scroll chip-row" aria-label="Popular searches">
+        <span class="chip">Safe SUV under 20 lakhs</span>
+        <span class="chip">7-seater diesel automatic</span>
+        <span class="chip">Best EV for city driving</span>
+        <span class="chip">Premium sedan with sunroof</span>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      @if (trending()?.length && trending()![0].imageUrl) {
+        <div class="hero-frame">
+          <app-car-image [src]="trending()![0].imageUrl" [alt]="trending()![0].makeName + ' ' + trending()![0].modelName" imgClass="cd-hero-img" />
+          <div class="hero-caption">{{ trending()![0].makeName }} {{ trending()![0].modelName }}</div>
+        </div>
+      } @else {
+        <div class="hero-placeholder">
+          <mat-icon class="hero-ph-icon">directions_car</mat-icon>
+          <span>Live inventory &amp; photos from your catalog</span>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="trust-strip">
+  <div class="trust-inner">
+    <span><mat-icon>verified</mat-icon> Structured specs</span>
+    <span><mat-icon>trending_up</mat-icon> Match scores</span>
+    <span><mat-icon>compare_arrows</mat-icon> Compare up to 4</span>
+    <span><mat-icon>bookmark</mat-icon> Shortlist</span>
+  </div>
+</section>
+
+<section class="section cd-section">
+  <div class="section-head">
+    <h2>Trending cars</h2>
+    <a mat-button color="primary" routerLink="/cars">View all</a>
+  </div>
+  @if (loading()) {
+    <div class="skeleton-grid" aria-busy="true">
+      @for (_ of [1, 2, 3, 4]; track _) {
+        <div class="sk-card">
+          <div class="sk-thumb"></div>
+          <div class="sk-line w70"></div>
+          <div class="sk-line w40"></div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="grid cd-car-grid">
+      @for (c of trending() ?? []; track c.id) {
+        <mat-card class="car-card cd-car-card" appearance="outlined">
+          <app-car-image [src]="c.imageUrl" [alt]="c.makeName + ' ' + c.modelName" imgClass="cd-list-thumb" />
+          <mat-card-header>
+            <mat-card-title>{{ c.makeName }} {{ c.modelName }}</mat-card-title>
+            <mat-card-subtitle>{{ c.variantName }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="price">{{ c.exShowroomPrice | inr }}</div>
+            <div class="meta">{{ c.bodyType }} · {{ c.fuelType }} · {{ c.transmission }}</div>
+          </mat-card-content>
+          <mat-card-actions align="end">
+            <a mat-flat-button color="primary" [routerLink]="['/cars', c.id]">View offers</a>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+  }
+</section>

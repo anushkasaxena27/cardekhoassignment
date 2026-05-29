@@ -1,0 +1,13 @@
+CREATE INDEX idx_car_model_make ON car_model (make_id);
+CREATE INDEX idx_car_variant_model ON car_variant (model_id);
+CREATE INDEX idx_car_variant_price ON car_variant (ex_showroom_price);
+CREATE INDEX idx_car_variant_fuel ON car_variant (fuel_type);
+CREATE INDEX idx_car_variant_body ON car_variant (model_id) INCLUDE (fuel_type, transmission);
+CREATE INDEX idx_safety_variant ON safety_rating (variant_id);
+CREATE INDEX idx_review_variant ON user_review (variant_id);
+CREATE INDEX idx_review_rating ON user_review (rating DESC);
+CREATE INDEX idx_car_image_variant ON car_image (variant_id);
+CREATE INDEX idx_search_log_created ON search_log (created_at DESC);
+CREATE INDEX idx_variant_search_count ON car_variant (search_count DESC);
+CREATE INDEX idx_variant_view_count ON car_variant (view_count DESC);
+CREATE INDEX idx_refresh_token_user ON refresh_token (user_id);

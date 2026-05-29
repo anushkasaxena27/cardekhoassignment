@@ -1,0 +1,41 @@
+.shell {
+  height: 100vh;
+}
+
+.side {
+  width: 260px;
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+}
+
+.glass {
+  backdrop-filter: blur(14px);
+  background: color-mix(in srgb, var(--mat-sys-surface) 82%, transparent) !important;
+  border-bottom: 1px solid color-mix(in srgb, var(--mat-sys-outline-variant) 55%, transparent);
+}
+
+.brand {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  color: inherit;
+  margin-left: 0.25rem;
+}
+
+.accent {
+  color: var(--cd-brand);
+  margin-left: 2px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.main {
+  min-height: calc(100vh - 64px);
+  padding: 0 0 3rem;
+}

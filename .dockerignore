@@ -1,0 +1,9 @@
+**/node_modules
+**/target
+.git
+.idea
+.vscode
+*.iml
+cardekho-web/dist
+cardekho-web/.angular
+**/.DS_Store

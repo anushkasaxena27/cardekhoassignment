@@ -1,0 +1,52 @@
+<div class="wrap cd-compare">
+  <header class="hd">
+    <h1>Compare cars</h1>
+    <p class="lead">Pick 2–4 variants side by side. Pre-fill with <code>?ids=1,2,3</code> in the URL.</p>
+  </header>
+
+  <mat-card appearance="outlined" class="panel">
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="runCompare()" class="row">
+        <mat-form-field appearance="outline" class="grow">
+          <mat-label>Variant IDs</mat-label>
+          <input matInput formControlName="ids" placeholder="e.g. 12, 48, 96" />
+        </mat-form-field>
+        <button mat-flat-button color="primary" type="submit">Compare</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  @if (loading()) {
+    <div class="center"><mat-progress-spinner diameter="40" mode="indeterminate" /></div>
+  } @else if (rows()?.length) {
+    <div class="cols cd-compare-cols">
+      @for (c of rows()!; track c.id) {
+        <mat-card class="col cd-compare-card" appearance="outlined">
+          <app-car-image [src]="c.imageUrl" [alt]="c.makeName + ' ' + c.modelName" imgClass="cd-compare-thumb" />
+          <mat-card-header>
+            <mat-card-title>{{ c.makeName }} {{ c.modelName }}</mat-card-title>
+            <mat-card-subtitle>{{ c.variantName }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <dl class="kv">
+              <dt>Price</dt>
+              <dd>{{ c.exShowroomPrice | inr }}</dd>
+              <dt>Fuel / trans</dt>
+              <dd>{{ c.fuelType }} · {{ c.transmission }}</dd>
+              <dt>Mileage</dt>
+              <dd>{{ c.mileage ?? '—' }}</dd>
+              <dt>Power</dt>
+              <dd>{{ c.horsepower ?? '—' }} hp</dd>
+              <dt>Safety (best)</dt>
+              <dd>{{ safetyMax(c) }}</dd>
+              <dt>Sunroof</dt>
+              <dd>{{ c.features?.sunroof ? 'Yes' : 'No' }}</dd>
+              <dt>Boot</dt>
+              <dd>{{ c.bootSpace ?? '—' }} L</dd>
+            </dl>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
+</div>
