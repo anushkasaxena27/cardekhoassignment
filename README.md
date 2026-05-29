@@ -1,108 +1,97 @@
-# CarDekho — Conversational Car Recommendation API
+# CarDekho AI — conversational car recommendations
 
-Spring Boot **3.3.x**, **Java 17**, **PostgreSQL**, **Flyway**, **JWT** auth, **rule-based NLP**, **recommendation scoring**, **OpenAPI/Swagger**, and a **programmatic catalog seed** (180+ variants, 900+ reviews, multiple images per variant).
+## Start the full app (Docker) — **read this first**
 
-## Prerequisites
+1. **Install and open [Docker Desktop](https://www.docker.com/products/docker-desktop/)**  
+   Installing is not enough: start the app from the Start menu and wait until it says **Docker is running** (whale icon idle).
 
-- JDK 17+
-- Maven 3.9+
-- Docker (for PostgreSQL and integration tests via Testcontainers)
+2. In a terminal, **cd to this folder** (the one that contains `pom.xml` and `docker-compose.demo.yml`).
 
-## Quick start (local)
-
-1. Start PostgreSQL:
+3. Run:
 
    ```bash
-   docker compose up -d postgres
+   docker compose -f docker-compose.demo.yml up --build
    ```
 
-2. Run the application (Flyway applies schema; seed runs on first empty DB):
+4. Open **http://localhost:8080** in the browser when logs settle (first run builds images and can take several minutes).
 
-   ```bash
-   mvn spring-boot:run
-   ```
+**Stuck on `npipe` / “cannot find the file specified”?** The Docker engine is not running — open Docker Desktop, wait until it is ready, then run `docker version` and confirm you see **Server** as well as **Client**.
 
-3. Open Swagger UI: `http://localhost:8081/swagger-ui.html`
+More detail (reset DB, change port, timing): **[DEPLOY-DEMO.md](./DEPLOY-DEMO.md)**.
 
-Default datasource (override with env vars `DATABASE_URL`, `DATABASE_USER`, `DATABASE_PASSWORD`):
+---
 
-- URL: `jdbc:postgresql://localhost:5432/carapp`
-- User / password: `cardekho` / `cardekho`
+## What we built and why
 
-Disable seeding: `SEED_ENABLED=false` or `app.seed.enabled=false`.
+A **small car marketplace + AI assistant**: users describe what they want in plain language; the backend **parses intent**, **filters inventory**, **scores variants**, and returns **explainable** picks with photos and prices. The goal was a **credible demo** of “CarDekho-style” discovery (browse, compare, shortlist) wired to a **real** Spring API and PostgreSQL catalog—not a slide deck.
 
-## Caching
+### Deliberately not in scope (cut or stubbed)
 
-Spring **simple** in-memory cache is enabled (trending analytics). **Redis** is not wired in this revision; you can add `spring-boot-starter-data-redis`, set `spring.cache.type=redis`, and provide a `RedisConnectionFactory` for distributed cache.
+- **No hosted LLM** — intent is **rule-based NLP** (regex/heuristics), not GPT calls (cost, keys, latency).
+- **No Redis / Elasticsearch** — analytics use a **simple in-memory cache**; search is SQL/JPA, not a search cluster.
+- **No production hardening** — demo JWT secret, no rate limits, no pen-test story.
+- **No mobile app** — responsive web only.
 
-## Key API paths
+---
 
-| Method | Path | Auth |
-|--------|------|------|
-| POST | `/api/auth/register` | Public |
-| POST | `/api/auth/login` | Public |
-| POST | `/api/auth/refresh` | Public |
-| GET | `/api/cars` | Public |
-| GET | `/api/cars/{id}` | Public |
-| POST | `/api/cars/filter` | Public |
-| POST | `/api/cars/search` | Public |
-| POST | `/api/cars/compare` | Public |
-| POST | `/api/recommendations/chat` | Public |
-| GET | `/api/analytics/trending` | Public |
-| GET | `/api/analytics/most-searched` | Public |
-| GET | `/api/analytics/top-rated` | Public |
-| GET/POST/DELETE | `/api/shortlist` … | JWT |
+## Tech stack (and why)
 
-## Sample requests
+| Layer | Choice | Why |
+|--------|--------|-----|
+| API | **Spring Boot 3**, **Java 17** | Standard stack for REST, security, validation, OpenAPI. |
+| Data | **PostgreSQL**, **Flyway**, **JPA** | Relational model for cars, users, reviews; migrations are reproducible. |
+| Auth | **JWT** (access + refresh) | Stateless API; shortlist and profile stay protected. |
+| UI | **Angular** (standalone, **Material**, signals-friendly services) | Structured SPA, accessible components, easy to theme “marketplace” UI. |
+| Dev / share | **Docker Compose** (Postgres + API + **nginx** SPA) | One command for someone else; same-origin `/api` avoids CORS pain. |
 
-**Register**
+---
 
-```http
-POST /api/auth/register
-Content-Type: application/json
+## AI tools vs. hand work
 
-{"email":"buyer@example.com","password":"changeMe123","fullName":"Buyer"}
-```
+**Where AI coding assistants helped most**
 
-**Login**
+- Faster **scaffolding** (Angular routes, Material layouts, proxy, Docker compose files).
+- **Boilerplate** (DTOs, repetitive service wiring, initial README structure).
+- **Debugging hints** after errors (e.g. read-only transaction + `INSERT`, `Double` vs `BigDecimal` from JPQL `avg()`).
 
-```http
-POST /api/auth/login
-Content-Type: application/json
+**What we kept manual / judgment-heavy**
 
-{"email":"buyer@example.com","password":"changeMe123"}
-```
+- **Data model and API contract** (what the recommendation response must contain).
+- **Transaction boundaries** (read-only vs writes, `REQUIRES_NEW` for logging).
+- **PostgreSQL 15 `public` schema permissions** — moved app tables to a dedicated **`cardekho`** schema and aligned Flyway/JPA.
+- **CORS and same-origin** story (proxy vs nginx in Docker).
 
-**Conversational recommendations**
+**Where tools got in the way**
 
-```http
-POST /api/recommendations/chat
-Content-Type: application/json
+- Wrong **defaults** (ports, DB users) that looked fine in snippets but broke a real machine.
+- Over-long docs; easy to **ship contradictions** unless trimmed (this README is intentionally short).
 
-{"query":"I need a safe SUV under 20 lakhs with good mileage"}
-```
+---
 
-Response includes `extractedIntent`, `appliedFilters`, and `recommendations` with `matchScore` and human-readable `reasons`.
+## If we had four more hours
 
-**Shortlist (JWT)**
+1. **Publish images** (GHCR/Docker Hub) so `docker compose pull && up` is fast for everyone—no local Maven/npm inside Docker on first run.  
+2. **Spring Boot Actuator** + documented probes for Kubernetes or Compose `healthcheck` without `wget` in the image.  
+3. **One smoke E2E** (Playwright or Cypress) against `http://localhost:8080` for chat + browse.  
+4. **Rate limiting** on `/api/recommendations/chat` and stricter JWT rotation notes for anything beyond demo.
 
-```http
-Authorization: Bearer <access_token>
-POST /api/shortlist/42
-```
+---
 
-## Tests
+## Local development (without full Docker stack)
 
-```bash
-mvn test
-```
+- **Database only:** `docker compose up -d postgres` (see [docker-compose.yml](./docker-compose.yml)).  
+- **Backend:** `mvn spring-boot:run` — API on **8081** by default; Swagger: **http://localhost:8081/swagger-ui.html**.  
+- **Frontend + backend together:** from repo root, **[README-NPM.md](./README-NPM.md)** (`npm start` after `npm install` + `npm run install:web`).
 
-Integration tests require Docker (Testcontainers PostgreSQL).
+DB defaults and schema notes: **[docs/postgresql-local.md](./docs/postgresql-local.md)**.
 
-## Advanced / not included
+---
 
-- **Elasticsearch** semantic search — extension point: add documents on seed and query from a dedicated `SearchService`.
-- **Redis** — optional; see Caching above.
+## API overview
+
+Public highlights: `POST /api/recommendations/chat`, `GET/POST /api/cars`, `GET /api/analytics/trending`. Shortlist and other user routes need JWT. Full list: **Swagger** when the API is running.
+
+---
 
 ## License
 
